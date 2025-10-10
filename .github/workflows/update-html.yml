@@ -1,15 +1,18 @@
-name: Update HTML
+name: Update Portfolio HTML
 
+# Run once per weekday (Monday–Friday) at market close
+# 4:00 PM Eastern Time → 20:00 UTC (EDT)
 on:
   schedule:
-    - cron: "*/5 * * * *"   # every 5 minutes
-  workflow_dispatch:        # allow manual runs
+    - cron: "0 20 * * 1-5"  # 20:00 UTC, Monday to Friday
+  workflow_dispatch:        # allow manual runs too
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout repo
         uses: actions/checkout@v3
 
@@ -19,9 +22,10 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install requests pandas python-dotenv
 
-      - name: Run script
+      - name: Generate HTML
         env:
           PUBLIC_SECRET: ${{ secrets.PUBLIC_SECRET }}
         run: python update_portfolio.py
@@ -31,5 +35,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add index.html
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update HTML"
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update HTML at market close"
           git push
