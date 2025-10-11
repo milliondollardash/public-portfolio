@@ -72,7 +72,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
             /* --- Portfolio Header --- */
             h1.portfolio-value { 
                 text-align: center; 
-                font-size: 40px;
+                font-size: 80px;
                 font-weight: 600; 
                 color: #00FFAA; 
                 margin-bottom: 10px;
@@ -103,21 +103,19 @@ def df_to_html(df, total_port_value, filename="index.html"):
                 text-align: center;
                 margin: 4px 0;
             }
-
-            /* Symbol and Value */
             td.symbol {
-                font-size: 28px;
+                font-size: clamp(24px, 6vw, 32px);  /* scales with viewport */
                 font-weight: 700;
             }
+
             td.value {
-                font-size: 22px;
+                font-size: clamp(40px, 5vw, 28px);  
                 font-weight: 600;
                 margin-bottom: 8px;
             }
 
-            /* Profit and Day Bought */
             td[data-label] {
-                font-size: 16px;
+                font-size: clamp(16px, 4vw, 20px);
                 color: #CCCCCC;
             }
             .gain-positive { color: #00FFAA; font-weight: 600; }
