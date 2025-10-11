@@ -188,14 +188,17 @@ def df_to_html(df, total_port_value, filename="index.html"):
 
         /* Set static desktop font sizes */
         td.symbol {
-            font-size: 40px;
+            font-size: 100px;
         }
         td.value {
-            font-size: 36px;
+            font-size: 50px;
         }
-        tr > td:nth-child(3),
+        tr > td:nth-child(3){
+            font-size: 40px;
+        }
         tr > td:nth-child(4) {
-            font-size: 16px;
+            font-size: 30px;
+            text-align:right;
         }
     }
 </style>
