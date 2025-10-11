@@ -196,6 +196,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
         }
     }
 </style>
+ <link rel="shortcut icon" type="image/x-icon" href="mdd.PNG">
         """
 
         # Ensure profit column is numeric
