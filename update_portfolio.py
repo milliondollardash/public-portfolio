@@ -32,7 +32,7 @@ def get_portfolio(access_token):
 
 # --- Build DataFrame with trophy and gains ---
 def portfolio_to_df(portfolio_data):
-    
+
     positions = portfolio_data.get("positions", [])
     if not positions:
         return pd.DataFrame()
@@ -52,6 +52,7 @@ def portfolio_to_df(portfolio_data):
     df = df.sort_values(by="value", ascending=False).reset_index(drop=True)
     return df
 
+    
 def df_to_html(df, total_port_value, filename="index.html"):
     if df.empty:
         html_content = "<h2>No positions found</h2>"
@@ -62,7 +63,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
                 font-family: 'Courier New', monospace; 
                 background-color: #111111; 
                 color: #00FF00; 
-                padding: 10px; 
+                padding: 20px; 
                 margin: 0; 
             }
 
@@ -70,81 +71,88 @@ def df_to_html(df, total_port_value, filename="index.html"):
                 text-align: center; 
                 color: #00FF00; 
                 font-family: 'Inter', sans-serif; 
-                font-size: clamp(24px, 6vw, 48px);
-                margin-bottom: 10px;
             }
 
             .timestamp { 
                 text-align: center; 
-                font-size: clamp(12px, 3vw, 16px); 
+                font-size: 16px; 
                 margin-bottom: 20px; 
                 color: #AAAAAA; 
             }
 
-            .table-container {
-                display: flex;
-                justify-content: center;   /* keeps table centered */
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                margin: auto;
-                max-width: 100%;
-            }
-
-            .portfolio-table { 
-                display: table; 
+            table { 
                 border-collapse: collapse; 
-                width: auto;   /* shrink to fit content */
-                min-width: 480px; /* keeps readability */
-                margin: 0 auto;
-            }
-            .portfolio-row { display: table-row; }
-            .portfolio-header { 
-                display: table-row; 
-                font-weight: bold; 
-                border-bottom: 2px solid #00FF00;
-            }
-            .portfolio-cell, .portfolio-header-cell { 
-                display: table-cell; 
-                padding: 8px 10px; 
+                margin: auto; 
                 text-align: center; 
-                font-size: clamp(14px, 3.5vw, 20px);
+                border:none; 
+                width: 80%;
             }
-            .portfolio-header-cell { color: #00FF00; }
-
+            th { 
+                font-size: 20px; 
+                padding: 8px 12px; 
+                border:none; 
+                border-bottom: 2px solid #00FF00; 
+            }
+            td { 
+                padding: 6px 12px; 
+                font-size: 18px; 
+                border:none; 
+            }
             .gain-positive { color: #00FF00; } 
-            .gain-negative { color: #FF0000; } 
+            .gain-negative { color: #FF0000; }
+
+            /* --- Responsive Card Layout for Mobile --- */
+            @media (max-width: 600px) {
+                table, thead, tbody, th, td, tr {
+                    display: block;
+                }
+                thead { display: none; }
+                tr {
+                    margin-bottom: 16px;
+                    border: 1px solid #00FF00;
+                    border-radius: 10px;
+                    padding: 10px;
+                    background: #1a1a1a;
+                }
+                td {
+                    display: flex;
+                    justify-content: space-between;
+                    text-align: left;
+                    font-size: 16px;
+                    padding: 6px 8px;
+                }
+                td::before {
+                    content: attr(data-label);
+                    font-weight: bold;
+                    color: #AAAAAA;
+                    margin-right: 10px;
+                }
+            }
         </style>
         """
 
-        # Format profit with colored spans
+        # Color-code profit column
         df_html = df.copy()
         df_html['profit'] = df_html['profit'].apply(
             lambda x: f"<span class='gain-positive'>{x}%</span>" if '+' in x else
                       f"<span class='gain-negative'>-{x.replace('-', '')}%</span>" if '-' in x else x
         )
 
-        # Timestamp + header
+        # Timestamp
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         header = f"<h1>${total_port_value}</h1>\n<div class='timestamp'>Last updated: {timestamp}</div>"
 
-        # Build table HTML
-        columns = df_html.columns.tolist()
-        html_rows = []
+        # Build table rows with data-labels for mobile cards
+        def build_rows(df):
+            rows = []
+            for _, row in df.iterrows():
+                tds = [f'<td data-label="{col}">{row[col]}</td>' for col in df.columns]
+                rows.append("<tr>" + "".join(tds) + "</tr>")
+            return "".join(rows)
 
-        # header row
-        header_row = "<div class='portfolio-header'>" + "".join(
-            f"<div class='portfolio-header-cell'>{col}</div>" for col in columns
-        ) + "</div>"
-        html_rows.append(header_row)
-
-        # data rows
-        for _, row in df_html.iterrows():
-            row_html = "<div class='portfolio-row'>" + "".join(
-                f"<div class='portfolio-cell'>{row[col]}</div>" for col in columns
-            ) + "</div>"
-            html_rows.append(row_html)
-
-        html_table = "<div class='table-container'><div class='portfolio-table'>" + "".join(html_rows) + "</div></div>"
+        table_body = build_rows(df_html)
+        table_headers = "".join([f"<th>{col}</th>" for col in df_html.columns])
+        html_table = f"<table><thead><tr>{table_headers}</tr></thead><tbody>{table_body}</tbody></table>"
 
         html_content = style + header + html_table
 
