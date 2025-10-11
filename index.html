@@ -4,7 +4,7 @@
                 font-family: 'Courier New', monospace; 
                 background-color: #111111; 
                 color: #00FF00; 
-                padding: 10px; 
+                padding: 20px; 
                 margin: 0; 
             }
 
@@ -12,49 +12,63 @@
                 text-align: center; 
                 color: #00FF00; 
                 font-family: 'Inter', sans-serif; 
-                font-size: clamp(24px, 6vw, 48px);
-                margin-bottom: 10px;
             }
 
             .timestamp { 
                 text-align: center; 
-                font-size: clamp(12px, 3vw, 16px); 
+                font-size: 16px; 
                 margin-bottom: 20px; 
                 color: #AAAAAA; 
             }
 
-            .table-container {
-                display: flex;
-                justify-content: center;   /* keeps table centered */
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                margin: auto;
-                max-width: 100%;
-            }
-
-            .portfolio-table { 
-                display: table; 
+            table { 
                 border-collapse: collapse; 
-                width: auto;   /* shrink to fit content */
-                min-width: 480px; /* keeps readability */
-                margin: 0 auto;
-            }
-            .portfolio-row { display: table-row; }
-            .portfolio-header { 
-                display: table-row; 
-                font-weight: bold; 
-                border-bottom: 2px solid #00FF00;
-            }
-            .portfolio-cell, .portfolio-header-cell { 
-                display: table-cell; 
-                padding: 8px 10px; 
+                margin: auto; 
                 text-align: center; 
-                font-size: clamp(14px, 3.5vw, 20px);
+                border:none; 
+                width: 80%;
             }
-            .portfolio-header-cell { color: #00FF00; }
-
+            th { 
+                font-size: 20px; 
+                padding: 8px 12px; 
+                border:none; 
+                border-bottom: 2px solid #00FF00; 
+            }
+            td { 
+                padding: 6px 12px; 
+                font-size: 18px; 
+                border:none; 
+            }
             .gain-positive { color: #00FF00; } 
-            .gain-negative { color: #FF0000; } 
+            .gain-negative { color: #FF0000; }
+
+            /* --- Responsive Card Layout for Mobile --- */
+            @media (max-width: 600px) {
+                table, thead, tbody, th, td, tr {
+                    display: block;
+                }
+                thead { display: none; }
+                tr {
+                    margin-bottom: 16px;
+                    border: 1px solid #00FF00;
+                    border-radius: 10px;
+                    padding: 10px;
+                    background: #1a1a1a;
+                }
+                td {
+                    display: flex;
+                    justify-content: space-between;
+                    text-align: left;
+                    font-size: 16px;
+                    padding: 6px 8px;
+                }
+                td::before {
+                    content: attr(data-label);
+                    font-weight: bold;
+                    color: #AAAAAA;
+                    margin-right: 10px;
+                }
+            }
         </style>
         <h1>$18.79</h1>
-<div class='timestamp'>Last updated: 2025-10-11 17:07:22</div><div class='table-container'><div class='portfolio-table'><div class='portfolio-header'><div class='portfolio-header-cell'>symbol</div><div class='portfolio-header-cell'>value</div><div class='portfolio-header-cell'>profit</div><div class='portfolio-header-cell'>day bought</div></div><div class='portfolio-row'><div class='portfolio-cell'>HRL</div><div class='portfolio-cell'>$4.95</div><div class='portfolio-cell'><span class='gain-negative'>- 0.99%</span></div><div class='portfolio-cell'>2025-10-09</div></div><div class='portfolio-row'><div class='portfolio-cell'>LXRX</div><div class='portfolio-cell'>$4.90</div><div class='portfolio-cell'><span class='gain-negative'>- 1.91%</span></div><div class='portfolio-cell'>2025-10-09</div></div><div class='portfolio-row'><div class='portfolio-cell'>BRK.B</div><div class='portfolio-cell'>$4.89</div><div class='portfolio-cell'><span class='gain-negative'>- 2.12%</span></div><div class='portfolio-cell'>2025-10-09</div></div><div class='portfolio-row'><div class='portfolio-cell'>LAES</div><div class='portfolio-cell'>$4.05</div><div class='portfolio-cell'><span class='gain-negative'>- 19.08%</span></div><div class='portfolio-cell'>2025-10-10</div></div></div></div>
+<div class='timestamp'>Last updated: 2025-10-11 17:17:10</div><table><thead><tr><th>symbol</th><th>value</th><th>profit</th><th>day bought</th></tr></thead><tbody><tr><td data-label="symbol">HRL</td><td data-label="value">$4.95</td><td data-label="profit"><span class='gain-negative'>- 0.99%</span></td><td data-label="day bought">2025-10-09</td></tr><tr><td data-label="symbol">LXRX</td><td data-label="value">$4.90</td><td data-label="profit"><span class='gain-negative'>- 1.91%</span></td><td data-label="day bought">2025-10-09</td></tr><tr><td data-label="symbol">BRK.B</td><td data-label="value">$4.89</td><td data-label="profit"><span class='gain-negative'>- 2.12%</span></td><td data-label="day bought">2025-10-09</td></tr><tr><td data-label="symbol">LAES</td><td data-label="value">$4.05</td><td data-label="profit"><span class='gain-negative'>- 19.08%</span></td><td data-label="day bought">2025-10-10</td></tr></tbody></table>
