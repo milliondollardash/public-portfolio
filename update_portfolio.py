@@ -72,7 +72,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
             /* --- Portfolio Header --- */
             h1.portfolio-value { 
                 text-align: center; 
-                font-size: clamp(80px, 5vw, 60px);  
+                font-size: 10em !important;  
                 font-weight: 600; 
                 color: #00FFAA; 
                 margin-bottom: 10px;
