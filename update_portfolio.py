@@ -74,7 +74,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
                 text-align: center; 
                 font-size: 10em !important;  
                 font-weight: 600; 
-                color: #00FFAA; 
+                color: #7fff01; 
                 margin-bottom: 10px;
             }
             .timestamp { 
