@@ -60,12 +60,12 @@ def df_to_html(df, total_port_value, filename="index.html"):
     else:
         style = """
         <style>
-    /* --- Base Styles (Mobile-First) - Optimized for Phone Screen --- */
+    /* --- Base Styles (Mobile-First) - MAXIMUM Mobile Size --- */
     body {
         font-family: 'Inter', sans-serif;
         background-color: #121212;
         color: #E0E0E0;
-        padding: 10px; /* Reduced base padding */
+        padding: 8px; /* Minimal padding for edge-to-edge feel */
         margin: 0;
         line-height: 1.5;
         min-height: 100vh;
@@ -74,8 +74,8 @@ def df_to_html(df, total_port_value, filename="index.html"):
     /* --- Portfolio Header --- */
     h1.portfolio-value {
         text-align: center;
-        /* Increased min font size for better mobile impact */
-        font-size: clamp(4em, 12vw, 6em); 
+        /* Assertive minimum font size */
+        font-size: clamp(9em, 12vw, 12em); 
         font-weight: 700;
         color: #4CAF50;
         margin-bottom: 5px;
@@ -84,7 +84,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
     .timestamp {
         text-align: center;
         color: #9E9E9E;
-        font-size: clamp(15px, 3vw, 17px); /* Slightly larger */
+        font-size: clamp(32px, 4vw, 36px); /* Larger secondary text */
         margin-bottom: 25px;
     }
 
@@ -97,9 +97,9 @@ def df_to_html(df, total_port_value, filename="index.html"):
         flex-direction: column;
 
         border-radius: 12px;
-        padding: 18px; /* Slightly more internal padding */
-        margin: 10px auto; /* Tighter vertical spacing, minimal horizontal margin */
-        max-width: 95%; /* **Key Change: Maximize horizontal space on mobile** */
+        padding: 20px; /* Generous internal padding */
+        margin: 8px auto; /* Tighter vertical spacing */
+        max-width: 98%; /* **Key Change: Virtually edge-to-edge** */
         background-color: #1E1E1E;
         border: 1px solid #282828;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
@@ -130,16 +130,16 @@ def df_to_html(df, total_port_value, filename="index.html"):
     }
 
     td.symbol {
-        /* Larger font for dominance */
-        font-size: clamp(24px, 7vw, 30px); 
+        /* Bolder, larger min font size */
+        font-size: clamp(26px, 8vw, 30px); 
         font-weight: 700;
         color: #F5F5F5;
         text-transform: uppercase;
     }
 
     td.value {
-        /* Larger font for dominance */
-        font-size: clamp(30px, 9vw, 38px); 
+        /* Bolder, larger min font size */
+        font-size: clamp(32px, 10vw, 40px); 
         font-weight: 600;
         color: #4CAF50;
     }
@@ -150,8 +150,8 @@ def df_to_html(df, total_port_value, filename="index.html"):
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 6px 0; /* Slightly more space */
-        font-size: clamp(15px, 4vw, 18px); /* Slightly larger secondary text */
+        padding: 8px 0; /* More space for secondary info */
+        font-size: clamp(16px, 4vw, 18px);
         color: #A0A0A0;
     }
 
@@ -180,15 +180,15 @@ def df_to_html(df, total_port_value, filename="index.html"):
     /* =================================================== */
     @media (min-width: 600px) {
         tr {
-            /* On wider screens, restrict max width and center more cleanly */
-            max-width: 550px; /* Bring the max-width back down for desktop */
+            /* Reset to a narrower, more pleasant reading width on desktop */
+            max-width: 90%; 
             padding: 25px; 
             margin: 15px auto;
         }
 
-        /* Reset font sizes for desktop viewing */
+        /* Set static desktop font sizes */
         td.symbol {
-            font-size: 28px;
+            font-size: 40px;
         }
         td.value {
             font-size: 36px;
