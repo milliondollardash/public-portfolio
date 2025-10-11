@@ -1,70 +1,153 @@
 
         <style>
-            /* --- Body & Fonts --- */
-            body { 
-                font-family: 'Inter', sans-serif; 
-                background-color: #0D0D0D; 
-                color: #FFFFFF; 
-                padding: 20px; 
-                margin: 0; 
-            }
+    /* --- Base Styles (Mobile-First) --- */
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #121212;
+        color: #E0E0E0;
+        padding: 20px; /* Reduced base padding for mobile */
+        margin: 0;
+        line-height: 1.5;
+        min-height: 100vh; /* Ensures full background on small content pages */
+    }
 
-            /* --- Portfolio Header --- */
-            h1.portfolio-value { 
-                text-align: center; 
-                font-size: 10em !important;  
-                font-weight: 600; 
-                color: #7fff01; 
-                margin-bottom: 10px;
-            }
-            .timestamp { 
-                text-align: center; 
-                color: #AAAAAA; 
-                font-size: 20px; 
-                margin-bottom: 20px; 
-            }
+    /* --- Portfolio Header --- */
+    h1.portfolio-value {
+        text-align: center;
+        /* Clamp ensures it scales well across all sizes */
+        font-size: clamp(3.5em, 12vw, 6em);
+        font-weight: 700;
+        color: #4CAF50;
+        margin-bottom: 5px;
+        letter-spacing: -0.5px;
+    }
+    .timestamp {
+        text-align: center;
+        color: #9E9E9E;
+        font-size: clamp(14px, 3vw, 16px);
+        margin-bottom: 30px;
+    }
 
-            /* --- Card-style layout for all screens --- */
-            table, thead, tbody, th, td, tr { display: block; }
-            thead { display: none; }
+    /* --- Card Structure (Responsive Table Hack) --- */
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
 
-            tr {
-                border-radius: 16px;
-                padding: 16px;
-                margin: 16px auto;  /* center cards */
-                max-width: 100%;
-                background-color: #1A1A1A;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-                transition: transform 0.15s ease, box-shadow 0.15s ease;
-            }
+    tr {
+        /* Flex container for content */
+        display: flex;
+        flex-direction: column; /* Stack all content vertically on mobile */
 
-            td {
-                display: block;
-                text-align: center;
-                margin: 4px 0;
-            }
-            td.symbol {
-                font-size: clamp(24px, 6vw, 32px);  /* scales with viewport */
-                font-weight: 700;
-            }
+        border-radius: 12px;
+        padding: 16px; /* Slightly reduced padding for mobile space */
+        margin: 12px auto;
+        max-width: 90%; /* Occupy most of the screen */
+        background-color: #1E1E1E;
+        border: 1px solid #282828;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s;
+    }
+    tr:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
+        background-color: #252525;
+    }
 
-            td.value {
-                font-size: clamp(40px, 5vw, 28px);  
-                font-weight: 600;
-                margin-bottom: 8px;
-            }
+    td {
+        display: block; /* Ensures they act as separate rows inside the flex column */
+        text-align: left;
+        margin: 0; /* Resetting margin for cleaner flex spacing */
+        padding: 4px 0;
+    }
 
-            td[data-label] {
-                font-size: clamp(16px, 4vw, 25px);
-                color: #CCCCCC;
-            }
-             td[data-label-time] {
-                font-size: clamp(6px, 4vw, 15px);
-                color: #CCCCCC;
-            }
+    /* --- Primary Info (Symbol and Value) --- */
+    /* Target the first two TDs (Symbol and Value) to appear on one line */
+    tr > td:nth-child(1),
+    tr > td:nth-child(2) {
+        display: flex; /* Make the TD contents flex */
+        justify-content: space-between; /* Push symbol and value apart */
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #282828; /* Separator line */
+    }
 
-            .gain-positive { color: #00FFAA; font-weight: 600; }
-            .gain-negative { color: #FF4C4C; font-weight: 600; }
-        </style>
+    td.symbol {
+        font-size: clamp(22px, 6vw, 28px);
+        font-weight: 700;
+        color: #F5F5F5;
+        text-transform: uppercase;
+    }
+
+    td.value {
+        font-size: clamp(28px, 8vw, 32px);
+        font-weight: 600;
+        color: #4CAF50;
+    }
+
+    /* --- Secondary Info (Profit and Day Bought) --- */
+    /* Target the last two TDs (Profit and Day Bought) to appear on one line */
+    tr > td:nth-child(3),
+    tr > td:nth-child(4) {
+        display: flex; /* Make the TD contents flex */
+        justify-content: space-between; /* Push label and value apart */
+        align-items: center;
+        padding: 4px 0;
+        font-size: clamp(14px, 3vw, 16px);
+        color: #A0A0A0;
+    }
+
+    td[data-label] {
+        /* Profit Label */
+        width: 50%;
+        text-align: left;
+    }
+
+    td[data-label-time] {
+        /* Day Bought Label */
+        width: 50%;
+        text-align: right;
+    }
+
+    /* --- Gain Colors --- */
+    .gain-positive {
+        color: #4CAF50;
+        font-weight: 600;
+    }
+    .gain-negative {
+        color: #F44336;
+        font-weight: 600;
+    }
+
+    /* =================================================== */
+    /* --- Desktop/Tablet Optimization (Media Query) --- */
+    /* =================================================== */
+    @media (min-width: 600px) {
+        tr {
+            /* On wider screens, restrict max width and center more cleanly */
+            max-width: 550px;
+            padding: 25px; /* More generous padding */
+            margin: 15px auto;
+        }
+
+        /* Symbol and Value (Primary Info) */
+        tr > td:nth-child(1),
+        tr > td:nth-child(2) {
+            padding: 10px 0;
+        }
+        td.symbol {
+            font-size: 28px;
+        }
+        td.value {
+            font-size: 36px;
+        }
+
+        /* Secondary Info (Profit and Day Bought) */
+        tr > td:nth-child(3),
+        tr > td:nth-child(4) {
+            font-size: 16px;
+            padding: 6px 0;
+        }
+    }
+</style>
         <h1 class='portfolio-value'>$18.79</h1>
-<div class='timestamp'>last updated: 2025-10-11 19:41:56</div><table><thead><tr><th>symbol</th><th>value</th><th>profit</th><th>day bought</th></tr></thead><tbody><tr class='tr-negative'><td class="symbol">HRL</td><td class="value">$4.95</td><td data-label="profit"><span class="gain-negative">-0.99%</span></td><td data-label-time="day bought">bought: 2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">LXRX</td><td class="value">$4.90</td><td data-label="profit"><span class="gain-negative">-1.91%</span></td><td data-label-time="day bought">bought: 2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">BRK.B</td><td class="value">$4.89</td><td data-label="profit"><span class="gain-negative">-2.12%</span></td><td data-label-time="day bought">bought: 2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">LAES</td><td class="value">$4.05</td><td data-label="profit"><span class="gain-negative">-19.08%</span></td><td data-label-time="day bought">bought: 2025-10-10</td></tr></tbody></table>
+<div class='timestamp'>last updated: 2025-10-11 19:56:26</div><table><thead><tr><th>symbol</th><th>value</th><th>profit</th><th>day bought</th></tr></thead><tbody><tr class='tr-negative'><td class="symbol">HRL</td><td class="value">$4.95</td><td data-label="profit"><span class="gain-negative">-0.99%</span></td><td data-label-time="day bought">bought: 2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">LXRX</td><td class="value">$4.90</td><td data-label="profit"><span class="gain-negative">-1.91%</span></td><td data-label-time="day bought">bought: 2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">BRK.B</td><td class="value">$4.89</td><td data-label="profit"><span class="gain-negative">-2.12%</span></td><td data-label-time="day bought">bought: 2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">LAES</td><td class="value">$4.05</td><td data-label="profit"><span class="gain-negative">-19.08%</span></td><td data-label-time="day bought">bought: 2025-10-10</td></tr></tbody></table>
