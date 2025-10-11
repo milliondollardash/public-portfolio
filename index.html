@@ -12,7 +12,7 @@
             /* --- Portfolio Header --- */
             h1.portfolio-value { 
                 text-align: center; 
-                font-size: clamp(28px, 6vw, 48px); 
+                font-size: 40px;
                 font-weight: 600; 
                 color: #00FFAA; 
                 margin-bottom: 10px;
@@ -24,67 +24,44 @@
                 margin-bottom: 20px; 
             }
 
-            /* --- Table / Cards --- */
-            table { 
-                border-collapse: collapse; 
-                margin: auto; 
-                text-align: center; 
-                border:none; 
-                width: 80%;
-            }
-            th { 
-                font-size: 20px; 
-                padding: 8px 12px; 
-                border:none; 
-                border-bottom: 2px solid #00FFAA; 
-            }
-            td { 
-                padding: 6px 12px; 
-                font-size: 18px; 
+            /* --- Card-style layout for all screens --- */
+            table, thead, tbody, th, td, tr { display: block; }
+            thead { display: none; }
+
+            tr {
+                border-radius: 16px;
+                padding: 16px;
+                margin: 16px auto;  /* center cards */
+                max-width: 500px;
+                background-color: #1A1A1A;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                transition: transform 0.15s ease, box-shadow 0.15s ease;
             }
 
-            /* Row-based coloring */
-            .tr-positive { 
-                background-color: rgba(0, 255, 170, 0.05);  
-            }
-            .tr-negative { 
-                background-color: rgba(255, 76, 76, 0.1);  
+            td {
+                display: block;
+                text-align: center;
+                margin: 4px 0;
             }
 
-            /* Profit coloring */
+            /* Symbol and Value */
+            td.symbol {
+                font-size: 28px;
+                font-weight: 700;
+            }
+            td.value {
+                font-size: 22px;
+                font-weight: 600;
+                margin-bottom: 8px;
+            }
+
+            /* Profit and Day Bought */
+            td[data-label] {
+                font-size: 16px;
+                color: #CCCCCC;
+            }
             .gain-positive { color: #00FFAA; font-weight: 600; }
             .gain-negative { color: #FF4C4C; font-weight: 600; }
-
-    
-
-            /* --- Mobile Card Layout --- */
-            @media (max-width: 768px) {
-                table, thead, tbody, th, td, tr {
-                    display: block;
-                    width: auto;
-                }
-                thead { display: none; }
-                tr {
-                    border-radius: 16px;
-                    padding: 12px;
-                    margin-bottom: 16px;
-                    background-color: #1A1A1A;
-                }
-         
-                td {
-                    display: flex;
-                    justify-content: space-between;
-                    text-align: left;
-                    font-size: clamp(14px, 4vw, 16px);
-                    padding: 6px 8px;
-                }
-                td::before { 
-                    content: attr(data-label); 
-                    font-weight: 500; 
-                    color: #AAAAAA; 
-                    margin-right: 10px;
-                }
-            }
         </style>
         <h1 class='portfolio-value'>$18.79</h1>
-<div class='timestamp'>Last updated: 2025-10-11 18:10:02</div><table><thead><tr><th>symbol</th><th>value</th><th>profit</th><th>day bought</th></tr></thead><tbody><tr class='tr-negative'><td data-label="symbol">HRL</td><td data-label="value">$4.95</td><td data-label="profit"><span class="gain-negative">-0.99%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td data-label="symbol">LXRX</td><td data-label="value">$4.90</td><td data-label="profit"><span class="gain-negative">-1.91%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td data-label="symbol">BRK.B</td><td data-label="value">$4.89</td><td data-label="profit"><span class="gain-negative">-2.12%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td data-label="symbol">LAES</td><td data-label="value">$4.05</td><td data-label="profit"><span class="gain-negative">-19.08%</span></td><td data-label="day bought">2025-10-10</td></tr></tbody></table>
+<div class='timestamp'>Last updated: 2025-10-11 18:37:20</div><table><thead><tr><th>symbol</th><th>value</th><th>profit</th><th>day bought</th></tr></thead><tbody><tr class='tr-negative'><td class="symbol">HRL</td><td class="value">$4.95</td><td data-label="profit"><span class="gain-negative">-0.99%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">LXRX</td><td class="value">$4.90</td><td data-label="profit"><span class="gain-negative">-1.91%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">BRK.B</td><td class="value">$4.89</td><td data-label="profit"><span class="gain-negative">-2.12%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">LAES</td><td class="value">$4.05</td><td data-label="profit"><span class="gain-negative">-19.08%</span></td><td data-label="day bought">2025-10-10</td></tr></tbody></table>
