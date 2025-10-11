@@ -72,7 +72,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
             /* --- Portfolio Header --- */
             h1.portfolio-value { 
                 text-align: center; 
-                font-size: clamp(28px, 6vw, 48px); 
+                font-size: 40px;
                 font-weight: 600; 
                 color: #00FFAA; 
                 margin-bottom: 10px;
@@ -84,96 +84,87 @@ def df_to_html(df, total_port_value, filename="index.html"):
                 margin-bottom: 20px; 
             }
 
-            /* --- Table / Cards --- */
-            table { 
-                border-collapse: collapse; 
-                margin: auto; 
-                text-align: center; 
-                border:none; 
-                width: 80%;
-            }
-            th { 
-                font-size: 20px; 
-                padding: 8px 12px; 
-                border:none; 
-                border-bottom: 2px solid #00FFAA; 
-            }
-            td { 
-                padding: 6px 12px; 
-                font-size: 18px; 
+            /* --- Card-style layout for all screens --- */
+            table, thead, tbody, th, td, tr { display: block; }
+            thead { display: none; }
+
+            tr {
+                border-radius: 16px;
+                padding: 16px;
+                margin: 16px auto;  /* center cards */
+                max-width: 500px;
+                background-color: #1A1A1A;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                transition: transform 0.15s ease, box-shadow 0.15s ease;
             }
 
-            /* Row-based coloring */
-            .tr-positive { 
-                background-color: rgba(0, 255, 170, 0.05);  
-            }
-            .tr-negative { 
-                background-color: rgba(255, 76, 76, 0.1);  
+            td {
+                display: block;
+                text-align: center;
+                margin: 4px 0;
             }
 
-            /* Profit coloring */
+            /* Symbol and Value */
+            td.symbol {
+                font-size: 28px;
+                font-weight: 700;
+            }
+            td.value {
+                font-size: 22px;
+                font-weight: 600;
+                margin-bottom: 8px;
+            }
+
+            /* Profit and Day Bought */
+            td[data-label] {
+                font-size: 16px;
+                color: #CCCCCC;
+            }
             .gain-positive { color: #00FFAA; font-weight: 600; }
             .gain-negative { color: #FF4C4C; font-weight: 600; }
-
-    
-
-            /* --- Mobile Card Layout --- */
-            @media (max-width: 768px) {
-                table, thead, tbody, th, td, tr {
-                    display: block;
-                    width: auto;
-                }
-                thead { display: none; }
-                tr {
-                    border-radius: 16px;
-                    padding: 12px;
-                    margin-bottom: 16px;
-                    background-color: #1A1A1A;
-                }
-         
-                td {
-                    display: flex;
-                    justify-content: space-between;
-                    text-align: left;
-                    font-size: clamp(14px, 4vw, 16px);
-                    padding: 6px 8px;
-                }
-                td::before { 
-                    content: attr(data-label); 
-                    font-weight: 500; 
-                    color: #AAAAAA; 
-                    margin-right: 10px;
-                }
-            }
         </style>
         """
 
-        # Color-code profit column
+        # Ensure profit column is numeric
         df_html = df.copy()
- 
-        # Timestamp
+        df_html['profit'] = df_html['profit'].astype(float)
+
+        # Header
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         header = f"<h1 class='portfolio-value'>${total_port_value}</h1>\n<div class='timestamp'>Last updated: {timestamp}</div>"
 
-        # Build table rows with data-labels and row classes
+        # Build table rows
         def build_rows(df):
             rows = []
             for _, row in df.iterrows():
-                profit_val = str(row['profit'])
-                row_class = "tr-positive" if '+' in profit_val else "tr-negative" if '-' in profit_val else ""
+                profit_val = row['profit']
+                row_class = "tr-positive" if profit_val > 0 else "tr-negative" if profit_val < 0 else ""
 
+                # Symbol and Value cells
+                symbol_cell = f'<td class="symbol">{row["symbol"]}</td>'
+                value_cell = f'<td class="value">{row["value"]}</td>'
+
+                # Profit and Day Bought
                 def format_cell(col, val):
                     if col == "profit":
-                        if val.startswith('+'):
-                            return f'<td data-label="{col}"><span class="gain-positive">{val}</span></td>'
-                        elif val.startswith('-'):
-                            return f'<td data-label="{col}"><span class="gain-negative">{val}</span></td>'
-                    return f'<td data-label="{col}">{val}</td>'
+                        val_str = f"{val:+.2f}%"
+                        if val > 0:
+                            return f'<td data-label="{col}"><span class="gain-positive">{val_str}</span></td>'
+                        elif val < 0:
+                            return f'<td data-label="{col}"><span class="gain-negative">{val_str}</span></td>'
+                        else:
+                            return f'<td data-label="{col}">{val_str}</td>'
+                    if col == "day bought":
+                        return f'<td data-label="{col}">{val}</td>'
+                    return ""
 
-                tds = [format_cell(col, row[col]) for col in df.columns]
-                rows.append(f"<tr class='{row_class}'>" + "".join(tds) + "</tr>")
+                profit_cell = format_cell("profit", profit_val)
+                day_cell = format_cell("day bought", row["day bought"])
+
+                tds = symbol_cell + value_cell + profit_cell + day_cell
+                rows.append(f"<tr class='{row_class}'>{tds}</tr>")
             return "".join(rows)
-        df_html['profit'] = df_html['profit'].apply(lambda x: f"{x:.2f}%" if isinstance(x, (int,float)) else x)
+
         table_body = build_rows(df_html)
         table_headers = "".join([f"<th>{col}</th>" for col in df_html.columns])
         html_table = f"<table><thead><tr>{table_headers}</tr></thead><tbody>{table_body}</tbody></table>"
