@@ -60,22 +60,22 @@ def df_to_html(df, total_port_value, filename="index.html"):
     else:
         style = """
         <style>
-    /* --- Base Styles (Mobile-First) --- */
+    /* --- Base Styles (Mobile-First) - Optimized for Phone Screen --- */
     body {
         font-family: 'Inter', sans-serif;
         background-color: #121212;
         color: #E0E0E0;
-        padding: 20px; /* Reduced base padding for mobile */
+        padding: 10px; /* Reduced base padding */
         margin: 0;
         line-height: 1.5;
-        min-height: 100vh; /* Ensures full background on small content pages */
+        min-height: 100vh;
     }
 
     /* --- Portfolio Header --- */
     h1.portfolio-value {
         text-align: center;
-        /* Clamp ensures it scales well across all sizes */
-        font-size: clamp(3.5em, 12vw, 6em);
+        /* Increased min font size for better mobile impact */
+        font-size: clamp(4em, 12vw, 6em); 
         font-weight: 700;
         color: #4CAF50;
         margin-bottom: 5px;
@@ -84,23 +84,22 @@ def df_to_html(df, total_port_value, filename="index.html"):
     .timestamp {
         text-align: center;
         color: #9E9E9E;
-        font-size: clamp(14px, 3vw, 16px);
-        margin-bottom: 30px;
+        font-size: clamp(15px, 3vw, 17px); /* Slightly larger */
+        margin-bottom: 25px;
     }
 
-    /* --- Card Structure (Responsive Table Hack) --- */
+    /* --- Card Structure (Mobile-Optimized) --- */
     table, thead, tbody, th, td, tr { display: block; }
     thead { display: none; }
 
     tr {
-        /* Flex container for content */
         display: flex;
-        flex-direction: column; /* Stack all content vertically on mobile */
+        flex-direction: column;
 
         border-radius: 12px;
-        padding: 16px; /* Slightly reduced padding for mobile space */
-        margin: 12px auto;
-        max-width: 90%; /* Occupy most of the screen */
+        padding: 18px; /* Slightly more internal padding */
+        margin: 10px auto; /* Tighter vertical spacing, minimal horizontal margin */
+        max-width: 95%; /* **Key Change: Maximize horizontal space on mobile** */
         background-color: #1E1E1E;
         border: 1px solid #282828;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
@@ -114,56 +113,54 @@ def df_to_html(df, total_port_value, filename="index.html"):
     }
 
     td {
-        display: block; /* Ensures they act as separate rows inside the flex column */
+        display: block;
         text-align: left;
-        margin: 0; /* Resetting margin for cleaner flex spacing */
+        margin: 0;
         padding: 4px 0;
     }
 
     /* --- Primary Info (Symbol and Value) --- */
-    /* Target the first two TDs (Symbol and Value) to appear on one line */
     tr > td:nth-child(1),
     tr > td:nth-child(2) {
-        display: flex; /* Make the TD contents flex */
-        justify-content: space-between; /* Push symbol and value apart */
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid #282828; /* Separator line */
+        padding: 10px 0;
+        border-bottom: 1px solid #282828;
     }
 
     td.symbol {
-        font-size: clamp(22px, 6vw, 28px);
+        /* Larger font for dominance */
+        font-size: clamp(24px, 7vw, 30px); 
         font-weight: 700;
         color: #F5F5F5;
         text-transform: uppercase;
     }
 
     td.value {
-        font-size: clamp(28px, 8vw, 32px);
+        /* Larger font for dominance */
+        font-size: clamp(30px, 9vw, 38px); 
         font-weight: 600;
         color: #4CAF50;
     }
 
     /* --- Secondary Info (Profit and Day Bought) --- */
-    /* Target the last two TDs (Profit and Day Bought) to appear on one line */
     tr > td:nth-child(3),
     tr > td:nth-child(4) {
-        display: flex; /* Make the TD contents flex */
-        justify-content: space-between; /* Push label and value apart */
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-        padding: 4px 0;
-        font-size: clamp(14px, 3vw, 16px);
+        padding: 6px 0; /* Slightly more space */
+        font-size: clamp(15px, 4vw, 18px); /* Slightly larger secondary text */
         color: #A0A0A0;
     }
 
     td[data-label] {
-        /* Profit Label */
         width: 50%;
         text-align: left;
     }
 
     td[data-label-time] {
-        /* Day Bought Label */
         width: 50%;
         text-align: right;
     }
@@ -184,28 +181,21 @@ def df_to_html(df, total_port_value, filename="index.html"):
     @media (min-width: 600px) {
         tr {
             /* On wider screens, restrict max width and center more cleanly */
-            max-width: 550px;
-            padding: 25px; /* More generous padding */
+            max-width: 550px; /* Bring the max-width back down for desktop */
+            padding: 25px; 
             margin: 15px auto;
         }
 
-        /* Symbol and Value (Primary Info) */
-        tr > td:nth-child(1),
-        tr > td:nth-child(2) {
-            padding: 10px 0;
-        }
+        /* Reset font sizes for desktop viewing */
         td.symbol {
             font-size: 28px;
         }
         td.value {
             font-size: 36px;
         }
-
-        /* Secondary Info (Profit and Day Bought) */
         tr > td:nth-child(3),
         tr > td:nth-child(4) {
             font-size: 16px;
-            padding: 6px 0;
         }
     }
 </style>
