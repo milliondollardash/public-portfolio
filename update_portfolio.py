@@ -106,12 +106,6 @@ def df_to_html(df, total_port_value, filename="index.html"):
         cursor: pointer;
         transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s;
     }
-    tr:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
-        background-color: #252525;
-    }
-
     td {
         display: block;
         text-align: left;
