@@ -12,7 +12,7 @@
             /* --- Portfolio Header --- */
             h1.portfolio-value { 
                 text-align: center; 
-                font-size: 40px;
+                font-size: 80px;
                 font-weight: 600; 
                 color: #00FFAA; 
                 margin-bottom: 10px;
@@ -43,25 +43,23 @@
                 text-align: center;
                 margin: 4px 0;
             }
-
-            /* Symbol and Value */
             td.symbol {
-                font-size: 28px;
+                font-size: clamp(24px, 6vw, 32px);  /* scales with viewport */
                 font-weight: 700;
             }
+
             td.value {
-                font-size: 22px;
+                font-size: clamp(40px, 5vw, 28px);  
                 font-weight: 600;
                 margin-bottom: 8px;
             }
 
-            /* Profit and Day Bought */
             td[data-label] {
-                font-size: 16px;
+                font-size: clamp(16px, 4vw, 20px);
                 color: #CCCCCC;
             }
             .gain-positive { color: #00FFAA; font-weight: 600; }
             .gain-negative { color: #FF4C4C; font-weight: 600; }
         </style>
         <h1 class='portfolio-value'>$18.79</h1>
-<div class='timestamp'>Last updated: 2025-10-11 18:37:20</div><table><thead><tr><th>symbol</th><th>value</th><th>profit</th><th>day bought</th></tr></thead><tbody><tr class='tr-negative'><td class="symbol">HRL</td><td class="value">$4.95</td><td data-label="profit"><span class="gain-negative">-0.99%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">LXRX</td><td class="value">$4.90</td><td data-label="profit"><span class="gain-negative">-1.91%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">BRK.B</td><td class="value">$4.89</td><td data-label="profit"><span class="gain-negative">-2.12%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">LAES</td><td class="value">$4.05</td><td data-label="profit"><span class="gain-negative">-19.08%</span></td><td data-label="day bought">2025-10-10</td></tr></tbody></table>
+<div class='timestamp'>Last updated: 2025-10-11 18:47:28</div><table><thead><tr><th>symbol</th><th>value</th><th>profit</th><th>day bought</th></tr></thead><tbody><tr class='tr-negative'><td class="symbol">HRL</td><td class="value">$4.95</td><td data-label="profit"><span class="gain-negative">-0.99%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">LXRX</td><td class="value">$4.90</td><td data-label="profit"><span class="gain-negative">-1.91%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">BRK.B</td><td class="value">$4.89</td><td data-label="profit"><span class="gain-negative">-2.12%</span></td><td data-label="day bought">2025-10-09</td></tr><tr class='tr-negative'><td class="symbol">LAES</td><td class="value">$4.05</td><td data-label="profit"><span class="gain-negative">-19.08%</span></td><td data-label="day bought">2025-10-10</td></tr></tbody></table>
