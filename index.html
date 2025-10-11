@@ -1,49 +1,60 @@
 
         <style>
-            h1 { text-align: center; color: #00FF00; font-family: 'Inter', sans-serif; }
-            body { font-family: 'Courier New', monospace; background-color: #111111; color: #00FF00; padding: 20px; margin: 0; }
-            table { border-collapse: collapse; margin: auto; text-align: center; border:none; }
-            th { font-size: 24px; padding: 8px 12px; border:none; border-bottom: 2px solid #00FF00; color: #00FF00; }
-            td { padding: 6px 12px; font-size: 20px; border:none; }
-            tr.top-row { font-weight: bold; }
+            body { 
+                font-family: 'Courier New', monospace; 
+                background-color: #111111; 
+                color: #00FF00; 
+                padding: 10px; 
+                margin: 0; 
+            }
+
+            h1 { 
+                text-align: center; 
+                color: #00FF00; 
+                font-family: 'Inter', sans-serif; 
+                font-size: clamp(24px, 6vw, 48px);
+                margin-bottom: 10px;
+            }
+
+            .timestamp { 
+                text-align: center; 
+                font-size: clamp(12px, 3vw, 16px); 
+                margin-bottom: 20px; 
+                color: #AAAAAA; 
+            }
+
+            .table-container {
+                display: flex;
+                justify-content: center;   /* keeps table centered */
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: auto;
+                max-width: 100%;
+            }
+
+            .portfolio-table { 
+                display: table; 
+                border-collapse: collapse; 
+                width: auto;   /* shrink to fit content */
+                min-width: 480px; /* keeps readability */
+                margin: 0 auto;
+            }
+            .portfolio-row { display: table-row; }
+            .portfolio-header { 
+                display: table-row; 
+                font-weight: bold; 
+                border-bottom: 2px solid #00FF00;
+            }
+            .portfolio-cell, .portfolio-header-cell { 
+                display: table-cell; 
+                padding: 8px 10px; 
+                text-align: center; 
+                font-size: clamp(14px, 3.5vw, 20px);
+            }
+            .portfolio-header-cell { color: #00FF00; }
+
             .gain-positive { color: #00FF00; } 
             .gain-negative { color: #FF0000; } 
-            .timestamp { text-align: center; font-size: 16px; margin-bottom: 20px; color: #AAAAAA; }
         </style>
-        <h1>$18.82</h1>
-<div class='timestamp'>Last updated: 2025-10-10 23:52:55</div><table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>symbol</th>
-      <th>value</th>
-      <th>profit</th>
-      <th>day bought</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class='top-row'>
-      <td>HRL</td>
-      <td>$4.97</td>
-      <td><span class='gain-negative'>- 0.57%</span></td>
-      <td>2025-10-09</td>
-    </tr>
-    <tr>
-      <td>LXRX</td>
-      <td>$4.90</td>
-      <td><span class='gain-negative'>- 1.91%</span></td>
-      <td>2025-10-09</td>
-    </tr>
-    <tr>
-      <td>BRK.B</td>
-      <td>$4.90</td>
-      <td><span class='gain-negative'>- 2.01%</span></td>
-      <td>2025-10-09</td>
-    </tr>
-    <tr>
-      <td>LAES</td>
-      <td>$4.05</td>
-      <td><span class='gain-negative'>- 19.08%</span></td>
-      <td>2025-10-10</td>
-    </tr>
-  </tbody>
-</table>
+        <h1>$18.79</h1>
+<div class='timestamp'>Last updated: 2025-10-11 17:07:22</div><div class='table-container'><div class='portfolio-table'><div class='portfolio-header'><div class='portfolio-header-cell'>symbol</div><div class='portfolio-header-cell'>value</div><div class='portfolio-header-cell'>profit</div><div class='portfolio-header-cell'>day bought</div></div><div class='portfolio-row'><div class='portfolio-cell'>HRL</div><div class='portfolio-cell'>$4.95</div><div class='portfolio-cell'><span class='gain-negative'>- 0.99%</span></div><div class='portfolio-cell'>2025-10-09</div></div><div class='portfolio-row'><div class='portfolio-cell'>LXRX</div><div class='portfolio-cell'>$4.90</div><div class='portfolio-cell'><span class='gain-negative'>- 1.91%</span></div><div class='portfolio-cell'>2025-10-09</div></div><div class='portfolio-row'><div class='portfolio-cell'>BRK.B</div><div class='portfolio-cell'>$4.89</div><div class='portfolio-cell'><span class='gain-negative'>- 2.12%</span></div><div class='portfolio-cell'>2025-10-09</div></div><div class='portfolio-row'><div class='portfolio-cell'>LAES</div><div class='portfolio-cell'>$4.05</div><div class='portfolio-cell'><span class='gain-negative'>- 19.08%</span></div><div class='portfolio-cell'>2025-10-10</div></div></div></div>
