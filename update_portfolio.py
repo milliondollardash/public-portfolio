@@ -44,42 +44,47 @@ def portfolio_to_df(portfolio_data):
         rows.append({
             "symbol": symbol,
             "value": f"${float(p['currentValue']):,.2f}",
-            "profit": f"{'+' if gain_perc>0 else '-' if gain_perc<0 else ''} {gain_perc:.2f}",
+            "profit": gain_perc,   # store as float
             "day bought": datetime.fromisoformat(p["openedAt"].replace('Z', '+00:00')).date()
         })
+
     
     df = pd.DataFrame(rows)
     df = df.sort_values(by="value", ascending=False).reset_index(drop=True)
     return df
 
-    
+
 def df_to_html(df, total_port_value, filename="index.html"):
     if df.empty:
         html_content = "<h2>No positions found</h2>"
     else:
         style = """
         <style>
+            /* --- Body & Fonts --- */
             body { 
-                font-family: 'Courier New', monospace; 
-                background-color: #111111; 
-                color: #00FF00; 
+                font-family: 'Inter', sans-serif; 
+                background-color: #0D0D0D; 
+                color: #FFFFFF; 
                 padding: 20px; 
                 margin: 0; 
             }
 
-            h1 { 
+            /* --- Portfolio Header --- */
+            h1.portfolio-value { 
                 text-align: center; 
-                color: #00FF00; 
-                font-family: 'Inter', sans-serif; 
+                font-size: clamp(28px, 6vw, 48px); 
+                font-weight: 600; 
+                color: #00FFAA; 
+                margin-bottom: 10px;
             }
-
             .timestamp { 
                 text-align: center; 
-                font-size: 16px; 
-                margin-bottom: 20px; 
                 color: #AAAAAA; 
+                font-size: 14px; 
+                margin-bottom: 20px; 
             }
 
+            /* --- Table / Cards --- */
             table { 
                 border-collapse: collapse; 
                 margin: auto; 
@@ -91,40 +96,52 @@ def df_to_html(df, total_port_value, filename="index.html"):
                 font-size: 20px; 
                 padding: 8px 12px; 
                 border:none; 
-                border-bottom: 2px solid #00FF00; 
+                border-bottom: 2px solid #00FFAA; 
             }
             td { 
                 padding: 6px 12px; 
                 font-size: 18px; 
-                border:none; 
             }
-            .gain-positive { color: #00FF00; } 
-            .gain-negative { color: #FF0000; }
 
-            /* --- Responsive Card Layout for Mobile --- */
-            @media (max-width: 600px) {
+            /* Row-based coloring */
+            .tr-positive { 
+                background-color: rgba(0, 255, 170, 0.05);  
+            }
+            .tr-negative { 
+                background-color: rgba(255, 76, 76, 0.1);  
+            }
+
+            /* Profit coloring */
+            .gain-positive { color: #00FFAA; font-weight: 600; }
+            .gain-negative { color: #FF4C4C; font-weight: 600; }
+
+    
+
+            /* --- Mobile Card Layout --- */
+            @media (max-width: 768px) {
                 table, thead, tbody, th, td, tr {
                     display: block;
+                    width: auto;
                 }
                 thead { display: none; }
                 tr {
+                    border-radius: 16px;
+                    padding: 12px;
                     margin-bottom: 16px;
-                    border: 1px solid #00FF00;
-                    border-radius: 10px;
-                    padding: 10px;
-                    background: #1a1a1a;
+                    background-color: #1A1A1A;
                 }
+         
                 td {
                     display: flex;
                     justify-content: space-between;
                     text-align: left;
-                    font-size: 16px;
+                    font-size: clamp(14px, 4vw, 16px);
                     padding: 6px 8px;
                 }
-                td::before {
-                    content: attr(data-label);
-                    font-weight: bold;
-                    color: #AAAAAA;
+                td::before { 
+                    content: attr(data-label); 
+                    font-weight: 500; 
+                    color: #AAAAAA; 
                     margin-right: 10px;
                 }
             }
@@ -133,23 +150,30 @@ def df_to_html(df, total_port_value, filename="index.html"):
 
         # Color-code profit column
         df_html = df.copy()
-        df_html['profit'] = df_html['profit'].apply(
-            lambda x: f"<span class='gain-positive'>{x}%</span>" if '+' in x else
-                      f"<span class='gain-negative'>-{x.replace('-', '')}%</span>" if '-' in x else x
-        )
-
+ 
         # Timestamp
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        header = f"<h1>${total_port_value}</h1>\n<div class='timestamp'>Last updated: {timestamp}</div>"
+        header = f"<h1 class='portfolio-value'>${total_port_value}</h1>\n<div class='timestamp'>Last updated: {timestamp}</div>"
 
-        # Build table rows with data-labels for mobile cards
+        # Build table rows with data-labels and row classes
         def build_rows(df):
             rows = []
             for _, row in df.iterrows():
-                tds = [f'<td data-label="{col}">{row[col]}</td>' for col in df.columns]
-                rows.append("<tr>" + "".join(tds) + "</tr>")
-            return "".join(rows)
+                profit_val = str(row['profit'])
+                row_class = "tr-positive" if '+' in profit_val else "tr-negative" if '-' in profit_val else ""
 
+                def format_cell(col, val):
+                    if col == "profit":
+                        if val.startswith('+'):
+                            return f'<td data-label="{col}"><span class="gain-positive">{val}</span></td>'
+                        elif val.startswith('-'):
+                            return f'<td data-label="{col}"><span class="gain-negative">{val}</span></td>'
+                    return f'<td data-label="{col}">{val}</td>'
+
+                tds = [format_cell(col, row[col]) for col in df.columns]
+                rows.append(f"<tr class='{row_class}'>" + "".join(tds) + "</tr>")
+            return "".join(rows)
+        df_html['profit'] = df_html['profit'].apply(lambda x: f"{x:.2f}%" if isinstance(x, (int,float)) else x)
         table_body = build_rows(df_html)
         table_headers = "".join([f"<th>{col}</th>" for col in df_html.columns])
         html_table = f"<table><thead><tr>{table_headers}</tr></thead><tbody>{table_body}</tbody></table>"
