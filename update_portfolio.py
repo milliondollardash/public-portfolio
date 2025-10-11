@@ -80,7 +80,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
             .timestamp { 
                 text-align: center; 
                 color: #AAAAAA; 
-                font-size: 14px; 
+                font-size: 20px; 
                 margin-bottom: 20px; 
             }
 
@@ -92,7 +92,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
                 border-radius: 16px;
                 padding: 16px;
                 margin: 16px auto;  /* center cards */
-                max-width: 500px;
+                max-width: 100%;
                 background-color: #1A1A1A;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.3);
                 transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -115,9 +115,14 @@ def df_to_html(df, total_port_value, filename="index.html"):
             }
 
             td[data-label] {
-                font-size: clamp(16px, 4vw, 20px);
+                font-size: clamp(16px, 4vw, 25px);
                 color: #CCCCCC;
             }
+             td[data-label-time] {
+                font-size: clamp(6px, 4vw, 15px);
+                color: #CCCCCC;
+            }
+
             .gain-positive { color: #00FFAA; font-weight: 600; }
             .gain-negative { color: #FF4C4C; font-weight: 600; }
         </style>
@@ -129,7 +134,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
 
         # Header
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        header = f"<h1 class='portfolio-value'>${total_port_value}</h1>\n<div class='timestamp'>Last updated: {timestamp}</div>"
+        header = f"<h1 class='portfolio-value'>${total_port_value}</h1>\n<div class='timestamp'>last updated: {timestamp}</div>"
 
         # Build table rows
         def build_rows(df):
@@ -153,7 +158,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
                         else:
                             return f'<td data-label="{col}">{val_str}</td>'
                     if col == "day bought":
-                        return f'<td data-label="{col}">{val}</td>'
+                        return f'<td data-label-time="{col}">bought: {val}</td>'
                     return ""
 
                 profit_cell = format_cell("profit", profit_val)
