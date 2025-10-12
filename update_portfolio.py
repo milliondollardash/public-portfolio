@@ -86,6 +86,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
         color: #9E9E9E;
         font-size: clamp(32px, 4vw, 36px); /* Larger secondary text */
         margin-bottom: 25px;
+        font-family: monospace;
     }
 
     /* --- Card Structure (Mobile-Optimized) --- */
