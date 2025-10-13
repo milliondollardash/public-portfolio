@@ -120,12 +120,23 @@ def df_to_html(df, total_port_value, filename="index.html"):
             padding: 20px;
             margin: 8px auto;
             max-width: 98%;
-            background-color: #1E1E1E;
-            border: 1px solid #282828;
+            background-color: #1E1E1E;  /* default */
+            # border: 1px solid #282828;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             gap: 8px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .row-card.positive {
+            background-color: rgba(76, 175, 80, 0.15);  /* subtle green tint */
+            # box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .row-card.negative {
+            background-color: rgba(244, 67, 54, 0.15);  /* subtle red tint */
+            # box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
         }
 
         .row-content {
@@ -213,12 +224,20 @@ def df_to_html(df, total_port_value, filename="index.html"):
                 else:
                     profit_cell = f'<div class="profit">{profit_val:+.2f}%</div>'
 
+                # Determine card class based on profit
+                if profit_val > 0:
+                    card_class = "row-card positive"
+                elif profit_val < 0:
+                    card_class = "row-card negative"
+                else:
+                    card_class = "row-card"
+
                 row_html = f"""
-                <div class="row-card">
+                <div class="{card_class}">
                     <div class="row-content">
                         <div class="symbol-row">
                             <div class="symbol">{row["symbol"]}</div>
-                            {indicator_html}  <!-- arrow/square AFTER symbol -->
+                            {indicator_html}
                         </div>
                         <div class="value">{row["value"]}</div>
                         {profit_cell}
@@ -226,6 +245,7 @@ def df_to_html(df, total_port_value, filename="index.html"):
                     </div>
                 </div>
                 """
+
                 rows.append(row_html)
             return "".join(rows)
 
