@@ -13,6 +13,7 @@ OUTPUT_FILE = "index.html"
 # Logging setup
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
+load_dotenv()
 
 # --- Load secret ---
 load_dotenv()
