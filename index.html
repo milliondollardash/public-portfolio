@@ -1,5 +1,4 @@
-
-        <style>
+<style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #121212;
@@ -32,12 +31,23 @@
             padding: 20px;
             margin: 8px auto;
             max-width: 98%;
-            background-color: #1E1E1E;
-            border: 1px solid #282828;
+            background-color: #1E1E1E;  /* default */
+            # border: 1px solid #282828;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             gap: 8px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .row-card.positive {
+            background-color: rgba(76, 175, 80, 0.15);  /* subtle green tint */
+            # box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .row-card.negative {
+            background-color: rgba(244, 67, 54, 0.15);  /* subtle red tint */
+            # box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
         }
 
         .row-content {
@@ -98,53 +108,54 @@
         }
         </style>
         <link rel="shortcut icon" type="image/x-icon" href="mdd.PNG">
-        <h1 class='portfolio-value'>$19.23</h1>
-<div class='timestamp'>last updated: 2025-10-13 20:33:52</div>
-                <div class="row-card">
-                    <div class="row-content">
-                        <div class="symbol-row">
-                            <div class="symbol">BRK.B</div>
-                            <div class="arrow gain-negative">▼</div>  <!-- arrow/square AFTER symbol -->
-                        </div>
-                        <div class="value">$4.94</div>
-                        <div class="profit gain-negative">-1.11%</div>
-                        <div class="day">bought: 2025-10-09</div>
-                    </div>
+                </style>
+              <link rel="shortcut icon" type="image/x-icon" href="mdd.PNG"><h1 class='portfolio-value'>$19.20</h1>
+<div class='timestamp'>last updated: 2025-10-13 21:50:36</div>
+        <div class="row-card negative">
+            <div class="row-content">
+                <div class="symbol-row">
+                    <div class="symbol">BRK.B</div>
+                    <div class="arrow gain-negative">▼</div>
                 </div>
-                
-                <div class="row-card">
-                    <div class="row-content">
-                        <div class="symbol-row">
-                            <div class="symbol">HRL</div>
-                            <div class="arrow gain-negative">▼</div>  <!-- arrow/square AFTER symbol -->
-                        </div>
-                        <div class="value">$4.92</div>
-                        <div class="profit gain-negative">-1.53%</div>
-                        <div class="day">bought: 2025-10-09</div>
-                    </div>
+                <div class="value">$4.94</div>
+                <div class="profit gain-negative">-1.25%</div>
+                <div class="day">bought: 2025-10-09</div>
+            </div>
+        </div>
+        
+        <div class="row-card negative">
+            <div class="row-content">
+                <div class="symbol-row">
+                    <div class="symbol">HRL</div>
+                    <div class="arrow gain-negative">▼</div>
                 </div>
-                
-                <div class="row-card">
-                    <div class="row-content">
-                        <div class="symbol-row">
-                            <div class="symbol">LAES</div>
-                            <div class="arrow gain-negative">▼</div>  <!-- arrow/square AFTER symbol -->
-                        </div>
-                        <div class="value">$4.72</div>
-                        <div class="profit gain-negative">-5.54%</div>
-                        <div class="day">bought: 2025-10-10</div>
-                    </div>
+                <div class="value">$4.92</div>
+                <div class="profit gain-negative">-1.61%</div>
+                <div class="day">bought: 2025-10-09</div>
+            </div>
+        </div>
+        
+        <div class="row-card negative">
+            <div class="row-content">
+                <div class="symbol-row">
+                    <div class="symbol">LAES</div>
+                    <div class="arrow gain-negative">▼</div>
                 </div>
-                
-                <div class="row-card">
-                    <div class="row-content">
-                        <div class="symbol-row">
-                            <div class="symbol">LXRX</div>
-                            <div class="arrow gain-negative">▼</div>  <!-- arrow/square AFTER symbol -->
-                        </div>
-                        <div class="value">$4.65</div>
-                        <div class="profit gain-negative">-7.01%</div>
-                        <div class="day">bought: 2025-10-09</div>
-                    </div>
+                <div class="value">$4.75</div>
+                <div class="profit gain-negative">-4.92%</div>
+                <div class="day">bought: 2025-10-10</div>
+            </div>
+        </div>
+        
+        <div class="row-card negative">
+            <div class="row-content">
+                <div class="symbol-row">
+                    <div class="symbol">LXRX</div>
+                    <div class="arrow gain-negative">▼</div>
                 </div>
-                
+                <div class="value">$4.59</div>
+                <div class="profit gain-negative">-8.29%</div>
+                <div class="day">bought: 2025-10-09</div>
+            </div>
+        </div>
+        
