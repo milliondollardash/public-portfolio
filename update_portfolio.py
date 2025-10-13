@@ -4,6 +4,7 @@ import requests
 import pandas as pd
 from datetime import datetime
 import subprocess
+import random
 
 # --- Load secret from environment (GitHub Actions uses Secrets) ---
 load_dotenv()
@@ -13,6 +14,33 @@ if not PUBLIC_SECRET:
     raise ValueError("No secret key found in environment variables!")
 
 repo_path = os.getcwd()  # GitHub Actions runs in the repo folder
+
+
+
+def make_sparkline(data, width=100, height=30, stroke="#4CAF50"):
+    if not data or len(data) < 2:
+        return ""  # not enough data
+
+    step_x = width / (len(data) - 1)
+
+    min_y, max_y = min(data), max(data)
+    if min_y == max_y:
+        points = [(i * step_x, height / 2) for i in range(len(data))]
+    else:
+        scale = height / (max_y - min_y)
+        points = [(i * step_x, height - (val - min_y) * scale) for i, val in enumerate(data)]
+
+    points_str = " ".join(f"{x:.1f},{y:.1f}" for x, y in points)
+    svg = f"""
+    <svg width="{width}" height="{height}" viewBox="0 0 {width} {height}"
+         xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <polyline fill="none" stroke="{stroke}" stroke-width="2"
+                  points="{points_str}" />
+    </svg>
+    """
+    return svg
+
+
 
 # --- API Functions ---
 def get_access_token(validity_minutes=123):
@@ -60,196 +88,155 @@ def df_to_html(df, total_port_value, filename="index.html"):
     else:
         style = """
         <style>
-    /* --- Base Styles (Mobile-First) - MAXIMUM Mobile Size --- */
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #121212;
-        color: #E0E0E0;
-        padding: 8px; /* Minimal padding for edge-to-edge feel */
-        margin: 0;
-        line-height: 1.5;
-        min-height: 100vh;
-    }
-
-    /* --- Portfolio Header --- */
-    h1.portfolio-value {
-        text-align: center;
-        /* Assertive minimum font size */
-        font-size: clamp(9em, 12vw, 12em); 
-        font-weight: 700;
-        color: #4CAF50;
-        margin-bottom: 5px;
-        letter-spacing: -0.5px;
-    }
-    .timestamp {
-        text-align: center;
-        color: #9E9E9E;
-        font-size: clamp(32px, 4vw, 36px); /* Larger secondary text */
-        margin-bottom: 25px;
-        font-family: monospace;
-    }
-
-    /* --- Card Structure (Mobile-Optimized) --- */
-    table, thead, tbody, th, td, tr { display: block; }
-    thead { display: none; }
-
-    tr {
-        display: flex;
-        flex-direction: column;
-
-        border-radius: 12px;
-        padding: 20px; /* Generous internal padding */
-        margin: 8px auto; /* Tighter vertical spacing */
-        max-width: 98%; /* **Key Change: Virtually edge-to-edge** */
-        background-color: #1E1E1E;
-        border: 1px solid #282828;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        cursor: pointer;
-        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s;
-    }
-    td {
-        display: block;
-        text-align: left;
-        margin: 0;
-        padding: 4px 0;
-    }
-
-    /* --- Primary Info (Symbol and Value) --- */
-    tr > td:nth-child(1),
-    tr > td:nth-child(2) {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #282828;
-    }
-
-    td.symbol {
-        /* Bolder, larger min font size */
-        font-size: clamp(26px, 8vw, 30px); 
-        font-weight: 700;
-        color: #F5F5F5;
-        text-transform: uppercase;
-    }
-
-    td.value {
-        /* Bolder, larger min font size */
-        font-size: clamp(32px, 10vw, 40px); 
-        font-weight: 600;
-        color: #4CAF50;
-    }
-
-    /* --- Secondary Info (Profit and Day Bought) --- */
-    tr > td:nth-child(3),
-    tr > td:nth-child(4) {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0; /* More space for secondary info */
-        font-size: clamp(16px, 4vw, 18px);
-        color: #A0A0A0;
-    }
-
-    td[data-label] {
-        width: 50%;
-        text-align: left;
-    }
-
-    td[data-label-time] {
-        width: 50%;
-        text-align: right;
-    }
-
-    /* --- Gain Colors --- */
-    .gain-positive {
-        color: #4CAF50;
-        font-weight: 600;
-    }
-    .gain-negative {
-        color: #F44336;
-        font-weight: 600;
-    }
-
-    /* =================================================== */
-    /* --- Desktop/Tablet Optimization (Media Query) --- */
-    /* =================================================== */
-    @media (min-width: 600px) {
-        tr {
-            /* Reset to a narrower, more pleasant reading width on desktop */
-            max-width: 90%; 
-            padding: 25px; 
-            margin: 15px auto;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            padding: 8px;
+            margin: 0;
+            line-height: 1.5;
+            min-height: 100vh;
         }
 
-        /* Set static desktop font sizes */
-        td.symbol {
-            font-size: 100px;
+        h1.portfolio-value {
+            text-align: center;
+            font-size: clamp(9em, 12vw, 12em);
+            font-weight: 700;
+            color: #4CAF50;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
         }
-        td.value {
-            font-size: 50px;
+
+        .timestamp {
+            text-align: center;
+            color: #9E9E9E;
+            font-size: clamp(32px, 4vw, 36px);
+            margin-bottom: 25px;
+            font-family: monospace;
         }
-        tr > td:nth-child(3){
-            font-size: 40px;
+
+        .row-card {
+            border-radius: 12px;
+            padding: 20px;
+            margin: 8px auto;
+            max-width: 98%;
+            background-color: #1E1E1E;
+            border: 1px solid #282828;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
-        tr > td:nth-child(4) {
-            font-size: 30px;
-            text-align:right;
+
+        .row-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
-    }
-</style>
- <link rel="shortcut icon" type="image/x-icon" href="mdd.PNG">
+
+        .symbol-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .symbol {
+            font-size: clamp(26px, 8vw, 100px);
+            font-weight: 700;
+            color: #F5F5F5;
+            text-transform: uppercase;
+        }
+
+        .arrow {
+            display: inline-block;
+            font-size: 3em;
+        }
+
+        .gain-positive {
+            color: #4CAF50;
+        }
+        .gain-negative {
+            color: #F44336;
+        }
+        .neutral-square {
+            width: 16px;
+            height: 16px;
+            background-color: #9E9E9E;
+            border-radius: 2px;
+        }
+
+        .value {
+            font-size: clamp(32px, 10vw, 50px);
+            font-weight: 600;
+            color: #4CAF50;
+        }
+
+        .profit {
+            font-size: clamp(16px, 4vw, 40px);
+        }
+
+        .day {
+            font-size: clamp(14px, 3vw, 30px);
+            color: #A0A0A0;
+            text-align: right;
+        }
+
+        @media (min-width: 600px) {
+            .row-card { max-width: 90%; padding: 25px; margin: 15px auto; }
+        }
+        </style>
+        <link rel="shortcut icon" type="image/x-icon" href="mdd.PNG">
         """
 
-        # Ensure profit column is numeric
-        df_html = df.copy()
-        df_html['profit'] = df_html['profit'].astype(float)
-
-        # Header
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         header = f"<h1 class='portfolio-value'>${total_port_value}</h1>\n<div class='timestamp'>last updated: {timestamp}</div>"
 
-        # Build table rows
+        # Build card rows
         def build_rows(df):
             rows = []
             for _, row in df.iterrows():
                 profit_val = row['profit']
-                row_class = "tr-positive" if profit_val > 0 else "tr-negative" if profit_val < 0 else ""
 
-                # Symbol and Value cells
-                symbol_cell = f'<td class="symbol">{row["symbol"]}</td>'
-                value_cell = f'<td class="value">{row["value"]}</td>'
+                # Indicator after symbol
+                if profit_val > 0:
+                    indicator_html = '<div class="arrow gain-positive">▲</div>'
+                elif profit_val < 0:
+                    indicator_html = '<div class="arrow gain-negative">▼</div>'
+                else:
+                    indicator_html = '<div class="arrow neutral-square"></div>'
 
-                # Profit and Day Bought
-                def format_cell(col, val):
-                    if col == "profit":
-                        val_str = f"{val:+.2f}%"
-                        if val > 0:
-                            return f'<td data-label="{col}"><span class="gain-positive">{val_str}</span></td>'
-                        elif val < 0:
-                            return f'<td data-label="{col}"><span class="gain-negative">{val_str}</span></td>'
-                        else:
-                            return f'<td data-label="{col}">{val_str}</td>'
-                    if col == "day bought":
-                        return f'<td data-label-time="{col}">bought: {val}</td>'
-                    return ""
+                # Profit formatting
+                if profit_val > 0:
+                    profit_cell = f'<div class="profit gain-positive">{profit_val:+.2f}%</div>'
+                elif profit_val < 0:
+                    profit_cell = f'<div class="profit gain-negative">{profit_val:+.2f}%</div>'
+                else:
+                    profit_cell = f'<div class="profit">{profit_val:+.2f}%</div>'
 
-                profit_cell = format_cell("profit", profit_val)
-                day_cell = format_cell("day bought", row["day bought"])
-
-                tds = symbol_cell + value_cell + profit_cell + day_cell
-                rows.append(f"<tr class='{row_class}'>{tds}</tr>")
+                row_html = f"""
+                <div class="row-card">
+                    <div class="row-content">
+                        <div class="symbol-row">
+                            <div class="symbol">{row["symbol"]}</div>
+                            {indicator_html}  <!-- arrow/square AFTER symbol -->
+                        </div>
+                        <div class="value">{row["value"]}</div>
+                        {profit_cell}
+                        <div class="day">bought: {row["day bought"]}</div>
+                    </div>
+                </div>
+                """
+                rows.append(row_html)
             return "".join(rows)
 
-        table_body = build_rows(df_html)
-        table_headers = "".join([f"<th>{col}</th>" for col in df_html.columns])
-        html_table = f"<table><thead><tr>{table_headers}</tr></thead><tbody>{table_body}</tbody></table>"
-
-        html_content = style + header + html_table
+        table_body = build_rows(df)
+        html_content = style + header + table_body
 
     with open(filename, "w", encoding="utf-8") as f:
         f.write(html_content)
 
     print(f"✅ Portfolio exported as HTML: {filename}")
+
 
 
 # --- Main workflow ---
