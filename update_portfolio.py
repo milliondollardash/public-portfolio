@@ -8,17 +8,20 @@ import logging
 
 # --- Config ---
 API_BASE = "https://api.public.com"
-PORTFOLIO_ID = "5LF69378"   # could move to env later
 OUTPUT_FILE = "index.html"
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
+
 # --- Load secret ---
 load_dotenv()
 PUBLIC_SECRET = os.getenv("PUBLIC_SECRET")
+PORTFOLIO_ID = os.getenv("PORTFOLIO_ID")
 if not PUBLIC_SECRET:
     raise ValueError("❌ No secret key found in environment variables!")
+
+
 
 
 # --- API Functions ---
