@@ -16,7 +16,6 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 load_dotenv()
 
 # --- Load secret ---
-load_dotenv()
 PUBLIC_SECRET = os.getenv("PUBLIC_SECRET")
 PORTFOLIO_ID = os.getenv("PORTFOLIO_ID")
 if not PUBLIC_SECRET:
