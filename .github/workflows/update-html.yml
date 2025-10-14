@@ -4,9 +4,7 @@ name: Update Portfolio HTML
 # 4:00 PM Eastern Time → 20:00 UTC (EDT)
 on:
   schedule:
-    # Run once at 9:30am EST (14:30 UTC)
-    - cron: "30 14 * * 1-5"
-    # Then run hourly on the hour until 4pm EST (21:00 UTC)
+    - cron: "30 9 * * 1-5"
     - cron: "0 15-21 * * 1-5"
   workflow_dispatch:        # allow manual runs too
 
