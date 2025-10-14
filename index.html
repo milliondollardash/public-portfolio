@@ -16,8 +16,19 @@
             color: #4CAF50;
             margin-bottom: 5px;
             letter-spacing: -0.5px;
+            animation: flicker 1s ease-in-out;
         }
 
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 8px #4CAF50;  /* only green glow */
+            }
+            20%, 22%, 24%, 55% {
+                opacity: 0.6;
+                text-shadow: 0 0 4px #4CAF50;  /* smaller green glow */
+            }
+        }
         .timestamp {
             text-align: center;
             color: #9E9E9E;
@@ -31,94 +42,90 @@
             padding: 20px;
             margin: 8px auto;
             max-width: 98%;
-            background-color: #1E1E1E;  /* default */
-            # border: 1px solid #282828;
+            background-color: #1E1E1E;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             gap: 8px;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            animation: slideFadeScale 0.6s forwards;
+            animation-delay: var(--delay, 0s);
+            animation-timing-function: cubic-bezier(0.25, 1.2, 0.35, 1);
         }
 
-        .row-card.positive {
-            background-color: rgba(76, 175, 80, 0.15);  /* subtle green tint */
-            # box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        @keyframes slideFadeScale {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(-10px) scale(1.03);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
-        .row-card.negative {
-            background-color: rgba(244, 67, 54, 0.15);  /* subtle red tint */
-            # box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        .row-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
         }
 
-        .row-content {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+        .row-card.positive { background-color: rgba(76, 175, 80, 0.15); }
+        .row-card.negative { background-color: rgba(244, 67, 54, 0.15); }
 
-        .symbol-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .symbol {
-            font-size: clamp(26px, 8vw, 100px);
-            font-weight: 700;
-            color: #F5F5F5;
-            text-transform: uppercase;
-        }
-
-        .arrow {
-            display: inline-block;
-            font-size: 3em;
-        }
-
-        .gain-positive {
-            color: #4CAF50;
-        }
-        .gain-negative {
-            color: #F44336;
-        }
-        .neutral-square {
-            width: 16px;
-            height: 16px;
-            background-color: #9E9E9E;
-            border-radius: 2px;
-        }
-
-        .value {
-            font-size: clamp(32px, 10vw, 50px);
-            font-weight: 600;
-            color: #4CAF50;
-        }
-
-        .profit {
-            font-size: clamp(16px, 4vw, 40px);
-        }
-
-        .day {
-            font-size: clamp(14px, 3vw, 30px);
-            color: #A0A0A0;
-            text-align: right;
-        }
+        .row-content { display: flex; flex-direction: column; gap: 6px; }
+        .symbol-row { display: flex; align-items: center; gap: 8px; }
+        .symbol { font-size: clamp(26px, 8vw, 100px); font-weight: 700; color: #F5F5F5; text-transform: uppercase; }
+        .arrow { display: inline-block; font-size: 3em; }
+        .gain-positive { color: #4CAF50; }
+        .gain-negative { color: #F44336; }
+        .neutral-square { width: 16px; height: 16px; background-color: #9E9E9E; border-radius: 2px; }
+        .value { font-size: clamp(32px, 10vw, 50px); font-weight: 600; color: #4CAF50; }
+        .profit { font-size: clamp(16px, 4vw, 40px); }
+        .day { font-size: clamp(14px, 3vw, 30px); color: #A0A0A0; text-align: right; }
 
         @media (min-width: 600px) {
             .row-card { max-width: 90%; padding: 25px; margin: 15px auto; }
         }
         </style>
         <link rel="shortcut icon" type="image/x-icon" href="mdd.PNG">
-                </style>
-              <link rel="shortcut icon" type="image/x-icon" href="mdd.PNG"><h1 class='portfolio-value'>$19.42</h1>
-<div class='timestamp'>last updated: 2025-10-13 22:56:39</div>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const cards = document.querySelectorAll('.row-card');
+            cards.forEach((card, index) => {
+                card.style.setProperty('--delay', `${index * 0.08}s`);
+            });
+        });
+        </script>
+    <h1 class='portfolio-value'>$19.90</h1>
+<div class='timestamp'>last updated: 2025-10-14 14:52:40</div>
+        <div class="row-card positive">
+            <div class="row-content">
+                <div class="symbol-row">
+                    <div class="symbol">LAES</div>
+                    <div class="arrow gain-positive">▲</div>
+                </div>
+                <div class="value">$5.41</div>
+                <div class="profit gain-positive">+8.17%</div>
+                <div class="day">bought: 2025-10-10</div>
+            </div>
+        </div>
+        
         <div class="row-card negative">
             <div class="row-content">
                 <div class="symbol-row">
                     <div class="symbol">BRK.B</div>
                     <div class="arrow gain-negative">▼</div>
                 </div>
-                <div class="value">$4.94</div>
-                <div class="profit gain-negative">-1.21%</div>
+                <div class="value">$4.96</div>
+                <div class="profit gain-negative">-0.85%</div>
                 <div class="day">bought: 2025-10-09</div>
             </div>
         </div>
@@ -129,21 +136,9 @@
                     <div class="symbol">HRL</div>
                     <div class="arrow gain-negative">▼</div>
                 </div>
-                <div class="value">$4.92</div>
-                <div class="profit gain-negative">-1.62%</div>
+                <div class="value">$4.90</div>
+                <div class="profit gain-negative">-2.03%</div>
                 <div class="day">bought: 2025-10-09</div>
-            </div>
-        </div>
-        
-        <div class="row-card negative">
-            <div class="row-content">
-                <div class="symbol-row">
-                    <div class="symbol">LAES</div>
-                    <div class="arrow gain-negative">▼</div>
-                </div>
-                <div class="value">$4.88</div>
-                <div class="profit gain-negative">-2.31%</div>
-                <div class="day">bought: 2025-10-10</div>
             </div>
         </div>
         
@@ -153,8 +148,8 @@
                     <div class="symbol">LXRX</div>
                     <div class="arrow gain-negative">▼</div>
                 </div>
-                <div class="value">$4.68</div>
-                <div class="profit gain-negative">-6.37%</div>
+                <div class="value">$4.63</div>
+                <div class="profit gain-negative">-7.32%</div>
                 <div class="day">bought: 2025-10-09</div>
             </div>
         </div>
