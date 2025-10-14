@@ -4,8 +4,6 @@ name: Update Portfolio HTML
 # 4:00 PM Eastern Time → 20:00 UTC (EDT)
 on:
   schedule:
-on:
-  schedule:
     - cron: "30 14 * * 1-5"   # 9:30 AM ET (market open)
     - cron: "0 15-20 * * 1-5" # Every hour 10 AM–3 PM ET
     - cron: "15 21 * * 1-5"   # 4:15 PM ET (market close buffer)
