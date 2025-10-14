@@ -2,9 +2,11 @@ from dotenv import load_dotenv
 import os
 import requests
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 import logging
+from zoneinfo import ZoneInfo
+
 
 # --- Config ---
 API_BASE = "https://api.public.com"
@@ -182,9 +184,11 @@ def build_style() -> str:
 
 
 def build_header(total_value: str) -> str:
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    utc_time = datetime.now(timezone.utc)
+    eastern_time = utc_time.astimezone(ZoneInfo("America/New_York"))
+    timestamp_est = eastern_time.strftime("%Y-%m-%d %I:%M:%S %p %Z")
     return f"<h1 class='portfolio-value'>${total_value}</h1>\n" \
-           f"<div class='timestamp'>last updated: {timestamp}</div>"
+           f"<div class='timestamp'>last updated: {timestamp_est}</div>"
 
 
 def build_rows(df: pd.DataFrame) -> str:
