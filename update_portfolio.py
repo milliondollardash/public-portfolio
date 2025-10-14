@@ -123,29 +123,27 @@ def build_style() -> str:
             display: flex;
             flex-direction: column;
             gap: 8px;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            transition: background-color 0.5s ease, box-shadow 0.3s ease, transform 0.3s ease;
 
+            /* animation */
             opacity: 0;
-            transform: translateY(40px) scale(0.95);
-            animation: slideFadeScale 0.6s forwards;
-            animation-delay: var(--delay, 0s);
-            animation-timing-function: cubic-bezier(0.25, 1.2, 0.35, 1);
+            transform: translateY(-20px); /* start slightly above */
+            animation: fadeDownIn 0.6s forwards;
+            animation-delay: var(--delay, 4s);
+            animation-timing-function: ease-out;
         }
 
-        @keyframes slideFadeScale {
-            0% {
+        @keyframes fadeDownIn {
+            from {
                 opacity: 0;
-                transform: translateY(40px) scale(0.95);
+                transform: translateY(-20px);
             }
-            60% {
+            to {
                 opacity: 1;
-                transform: translateY(-10px) scale(1.03);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(0);
             }
         }
+
 
         .row-card:hover {
             transform: translateY(-5px) scale(1.02);
@@ -176,7 +174,7 @@ def build_style() -> str:
         document.addEventListener("DOMContentLoaded", () => {
             const cards = document.querySelectorAll('.row-card');
             cards.forEach((card, index) => {
-                card.style.setProperty('--delay', `${index * 0.08}s`);
+                card.style.setProperty('--delay', `${index * 0.3}s`);
             });
         });
         </script>
