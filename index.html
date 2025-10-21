@@ -89,31 +89,28 @@
         @media (min-width: 600px) {
             .row-card { max-width: 90%; padding: 25px; margin: 15px auto; }
         }
-        @keyframes heartbeat-green {
+         @keyframes flicker-green {
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
                 opacity: 1;
-                transform: scale(1);
                 text-shadow: 0 0 8px #4CAF50;
             }
             20%, 22%, 24%, 55% {
                 opacity: 0.6;
-                transform: scale(1.05);
-                text-shadow: 0 0 12px #4CAF50;
+                text-shadow: 0 0 4px #4CAF50;
             }
         }
 
-        @keyframes heartbeat-red {
+        @keyframes flicker-red {
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
                 opacity: 1;
-                transform: scale(1);
                 text-shadow: 0 0 8px #F44336;
             }
             20%, 22%, 24%, 55% {
                 opacity: 0.6;
-                transform: scale(1.05);
-                text-shadow: 0 0 12px #F44336;
+                text-shadow: 0 0 4px #F44336;
             }
         }
+
 
         </style>
         <link rel="shortcut icon" type="image/x-icon" href="mdd.PNG">
@@ -127,10 +124,10 @@
         });
         </script>
     
-    <h1 class='portfolio-value' style='color:#F44336; animation: heartbeat-red 3s ease-in-out 1;'>
-        $19.18
+    <h1 class='portfolio-value' style='color:#F44336; animation: flicker-red 1s ease-in-out;'>
+        $19.19
     </h1>
-    <div class='timestamp'>last updated: 2025-10-21 05:44:15 PM EDT</div>
+    <div class='timestamp'>last updated: 2025-10-21 05:53:40 PM EDT</div>
     
         <div class="row-card positive">
             <div class="row-content">
@@ -139,7 +136,7 @@
                     <div class="arrow gain-positive">▲</div>
                 </div>
                 <div class="value gain-positive">$5.04</div>
-                <div class="profit gain-positive">+0.85%</div>
+                <div class="profit gain-positive">+0.89%</div>
                 <div class="day">bought: 2025-10-09</div>
             </div>
         </div>
@@ -151,7 +148,7 @@
                     <div class="arrow gain-negative">▼</div>
                 </div>
                 <div class="value gain-negative">$4.94</div>
-                <div class="profit gain-negative">-1.27%</div>
+                <div class="profit gain-negative">-1.28%</div>
                 <div class="day">bought: 2025-10-09</div>
             </div>
         </div>
@@ -174,8 +171,8 @@
                     <div class="symbol">LAES</div>
                     <div class="arrow gain-negative">▼</div>
                 </div>
-                <div class="value gain-negative">$4.55</div>
-                <div class="profit gain-negative">-8.92%</div>
+                <div class="value gain-negative">$4.56</div>
+                <div class="profit gain-negative">-8.77%</div>
                 <div class="day">bought: 2025-10-10</div>
             </div>
         </div>
