@@ -24,8 +24,6 @@ if not PUBLIC_SECRET:
     raise ValueError("❌ No secret key found in environment variables!")
 
 
-
-
 # --- API Functions ---
 def get_access_token(validity_minutes: int = 120) -> str:
     """Request a temporary access token."""
@@ -66,7 +64,7 @@ def portfolio_to_df(portfolio_data: dict) -> pd.DataFrame:
         symbol = p["instrument"]["symbol"]
         rows.append({
             "symbol": symbol,
-            "value": f"${float(p['currentValue']):,.2f}",
+            "value": float(p["currentValue"]),
             "profit": gain_perc,
             "day bought": datetime.fromisoformat(p["openedAt"].replace('Z', '+00:00')).date()
         })
@@ -97,16 +95,17 @@ def build_style() -> str:
             animation: flicker 1s ease-in-out;
         }
 
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-                opacity: 1;
-                text-shadow: 0 0 8px #4CAF50;  /* only green glow */
-            }
-            20%, 22%, 24%, 55% {
-                opacity: 0.6;
-                text-shadow: 0 0 4px #4CAF50;  /* smaller green glow */
-            }
+        @keyframes flicker-green {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; text-shadow: 0 0 8px #4CAF50; }
+            20%, 22%, 24%, 55% { opacity: 0.6; text-shadow: 0 0 4px #4CAF50; }
         }
+
+        @keyframes flicker-red {
+            0%, 1%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; text-shadow: 0 0 8px #F44336; }
+            20%, 22%, 24%, 55% { opacity: 0.6; text-shadow: 0 0 4px #F44336; }
+        }
+
+
         .timestamp {
             text-align: center;
             color: #9E9E9E;
@@ -127,25 +126,17 @@ def build_style() -> str:
             gap: 8px;
             transition: background-color 0.5s ease, box-shadow 0.3s ease, transform 0.3s ease;
 
-            /* animation */
             opacity: 0;
-            transform: translateY(-20px); /* start slightly above */
+            transform: translateY(-20px);
             animation: fadeDownIn 0.6s forwards;
             animation-delay: var(--delay, 4s);
             animation-timing-function: ease-out;
         }
 
         @keyframes fadeDownIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
 
         .row-card:hover {
             transform: translateY(-5px) scale(1.02);
@@ -162,13 +153,44 @@ def build_style() -> str:
         .gain-positive { color: #4CAF50; }
         .gain-negative { color: #F44336; }
         .neutral-square { width: 16px; height: 16px; background-color: #9E9E9E; border-radius: 2px; }
-        .value { font-size: clamp(32px, 10vw, 50px); font-weight: 600; color: #4CAF50; }
+
+        .value { font-size: clamp(32px, 10vw, 50px); font-weight: 600; }
+        .value.gain-positive { color: #4CAF50; }
+        .value.gain-negative { color: #F44336; }
+        .value.neutral { color: #9E9E9E; }
+
         .profit { font-size: clamp(16px, 4vw, 40px); }
         .day { font-size: clamp(14px, 3vw, 30px); color: #A0A0A0; text-align: right; }
 
         @media (min-width: 600px) {
             .row-card { max-width: 90%; padding: 25px; margin: 15px auto; }
         }
+        @keyframes heartbeat-green {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                opacity: 1;
+                transform: scale(1);
+                text-shadow: 0 0 8px #4CAF50;
+            }
+            20%, 22%, 24%, 55% {
+                opacity: 0.6;
+                transform: scale(1.05);
+                text-shadow: 0 0 12px #4CAF50;
+            }
+        }
+
+        @keyframes heartbeat-red {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                opacity: 1;
+                transform: scale(1);
+                text-shadow: 0 0 8px #F44336;
+            }
+            20%, 22%, 24%, 55% {
+                opacity: 0.6;
+                transform: scale(1.05);
+                text-shadow: 0 0 12px #F44336;
+            }
+        }
+
         </style>
         <link rel="shortcut icon" type="image/x-icon" href="mdd.PNG">
 
@@ -183,12 +205,28 @@ def build_style() -> str:
     """
 
 
-def build_header(total_value: str) -> str:
+def build_header(total_value: str, total_gain: float) -> str:
+    """Return HTML header with portfolio value color, heartbeat flicker based on total gain/loss."""
     utc_time = datetime.now(timezone.utc)
     eastern_time = utc_time.astimezone(ZoneInfo("America/New_York"))
     timestamp_est = eastern_time.strftime("%Y-%m-%d %I:%M:%S %p %Z")
-    return f"<h1 class='portfolio-value'>${total_value}</h1>\n" \
-           f"<div class='timestamp'>last updated: {timestamp_est}</div>"
+
+    if total_gain > 0:
+        color = "#4CAF50"
+        animation = "heartbeat-green 3s ease-in-out 1"
+    elif total_gain < 0:
+        color = "#F44336"
+        animation = "heartbeat-red 3s ease-in-out 1"
+    else:
+        color = "#E0E0E0"
+        animation = "none"
+
+    return f"""
+    <h1 class='portfolio-value' style='color:{color}; animation: {animation};'>
+        ${total_value}
+    </h1>
+    <div class='timestamp'>last updated: {timestamp_est}</div>
+    """
 
 
 def build_rows(df: pd.DataFrame) -> str:
@@ -196,18 +234,19 @@ def build_rows(df: pd.DataFrame) -> str:
     rows = []
     for _, row in df.iterrows():
         profit_val = row['profit']
+        value_formatted = f"${row['value']:,.2f}"
 
         if profit_val > 0:
             indicator_html = '<div class="arrow gain-positive">▲</div>'
-            profit_cell = f'<div class="profit gain-positive">{profit_val:+.2f}%</div>'
+            profit_class = "gain-positive"
             card_class = "row-card positive"
         elif profit_val < 0:
             indicator_html = '<div class="arrow gain-negative">▼</div>'
-            profit_cell = f'<div class="profit gain-negative">{profit_val:+.2f}%</div>'
+            profit_class = "gain-negative"
             card_class = "row-card negative"
         else:
             indicator_html = '<div class="arrow neutral-square"></div>'
-            profit_cell = f'<div class="profit">{profit_val:+.2f}%</div>'
+            profit_class = "neutral"
             card_class = "row-card"
 
         rows.append(f"""
@@ -217,21 +256,22 @@ def build_rows(df: pd.DataFrame) -> str:
                     <div class="symbol">{row["symbol"]}</div>
                     {indicator_html}
                 </div>
-                <div class="value">{row["value"]}</div>
-                {profit_cell}
+                <div class="value {profit_class}">{value_formatted}</div>
+                <div class="profit {profit_class}">{profit_val:+.2f}%</div>
                 <div class="day">bought: {row["day bought"]}</div>
             </div>
         </div>
         """)
+
     return "".join(rows)
 
-
-def df_to_html(df: pd.DataFrame, total_value: str, filename: str = OUTPUT_FILE) -> None:
-    """Convert DataFrame into styled HTML and write to file."""
+def df_to_html(df: pd.DataFrame, filename: str = OUTPUT_FILE) -> None:
     if df.empty:
         html_content = "<h2>No positions found</h2>"
     else:
-        html_content = build_style() + build_header(total_value) + build_rows(df)
+        total_value = df['value'].sum()
+        total_gain = ((df['profit'] * df['value']).sum() / total_value) if total_value else 0
+        html_content = build_style() + build_header(f"{total_value:,.2f}", total_gain) + build_rows(df)
 
     Path(filename).write_text(html_content, encoding="utf-8")
     logging.info(f"✅ Portfolio exported as HTML: {filename}")
@@ -241,14 +281,15 @@ def df_to_html(df: pd.DataFrame, total_value: str, filename: str = OUTPUT_FILE) 
 def main() -> None:
     token = get_access_token()
     portfolio_data = get_portfolio(token)
-
+    # print(portfolio_data)
     try:
         total_port_value = next(item['value'] for item in portfolio_data['equity'] if item['type'] == 'STOCK')
+        logging.info(f"Total $$$: {total_port_value}")
     except StopIteration:
         total_port_value = "0.00"
 
     df = portfolio_to_df(portfolio_data)
-    df_to_html(df, total_port_value)
+    df_to_html(df)
 
 
 if __name__ == "__main__":
