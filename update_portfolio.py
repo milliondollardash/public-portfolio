@@ -165,31 +165,28 @@ def build_style() -> str:
         @media (min-width: 600px) {
             .row-card { max-width: 90%; padding: 25px; margin: 15px auto; }
         }
-        @keyframes heartbeat-green {
+         @keyframes flicker-green {
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
                 opacity: 1;
-                transform: scale(1);
                 text-shadow: 0 0 8px #4CAF50;
             }
             20%, 22%, 24%, 55% {
                 opacity: 0.6;
-                transform: scale(1.05);
-                text-shadow: 0 0 12px #4CAF50;
+                text-shadow: 0 0 4px #4CAF50;
             }
         }
 
-        @keyframes heartbeat-red {
+        @keyframes flicker-red {
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
                 opacity: 1;
-                transform: scale(1);
                 text-shadow: 0 0 8px #F44336;
             }
             20%, 22%, 24%, 55% {
                 opacity: 0.6;
-                transform: scale(1.05);
-                text-shadow: 0 0 12px #F44336;
+                text-shadow: 0 0 4px #F44336;
             }
         }
+
 
         </style>
         <link rel="shortcut icon" type="image/x-icon" href="mdd.PNG">
@@ -206,17 +203,17 @@ def build_style() -> str:
 
 
 def build_header(total_value: str, total_gain: float) -> str:
-    """Return HTML header with portfolio value color, heartbeat flicker based on total gain/loss."""
+    """Return HTML header with portfolio value color and flicker."""
     utc_time = datetime.now(timezone.utc)
     eastern_time = utc_time.astimezone(ZoneInfo("America/New_York"))
     timestamp_est = eastern_time.strftime("%Y-%m-%d %I:%M:%S %p %Z")
 
     if total_gain > 0:
         color = "#4CAF50"
-        animation = "heartbeat-green 3s ease-in-out 1"
+        animation = "flicker-green 1s ease-in-out" 
     elif total_gain < 0:
         color = "#F44336"
-        animation = "heartbeat-red 3s ease-in-out 1"
+        animation = "flicker-red 1s ease-in-out"
     else:
         color = "#E0E0E0"
         animation = "none"
